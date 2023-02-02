@@ -1,0 +1,90 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  serviceName: mysql
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+        - image: mysql:5.7
+          name: mysql
+          args:
+            - --ignore-db-dir=lost+found
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql
+                  key: password
+          ports:
+            - containerPort: 3306
+              name: mysql
+          resources:
+              requests:
+                 cpu: "1"
+                 memory: "1Gi"
+              limits:
+                 cpu: "2"
+                 memory: "2Gi"
+          # https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/#define-a-tcp-liveness-probe
+          readinessProbe:
+            tcpSocket:
+              port: 3306
+            initialDelaySeconds: 6
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket:
+              port: 3306
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          volumeMounts:
+            - name: mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: mysql-volumeclaim
+---
+## config for service
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3306
+  selector:
+    app: mysql
+---
+## config pvc
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: mysql-volumeclaim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: pd-ssd-mysql
+  resources:
+    requests:
+      storage: 15Gi
+---
+## config storage class GCP (SSD/HDD)
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: pd-ssd-mysql
+provisioner: kubernetes.io/gce-pd
+parameters:
+  type: pd-ssd # use pd ssd for mysql
