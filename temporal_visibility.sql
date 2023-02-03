@@ -37,6 +37,7 @@ CREATE TABLE `schema_update_history` (
   PRIMARY KEY (`version_partition`,`year`,`month`,`update_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+INSERT INTO `schema_update_history` VALUES (0,2023,2,'2023-02-03 18:17:45.850791','initial version','','0.0','0'),(0,2023,2,'2023-02-03 18:17:51.221067','base version of visibility schema','698373883c1c0dd44607a446a62f2a79','1.0','0.0'),(0,2023,2,'2023-02-03 18:17:51.230583','add close time & status index','e286f8af0a62e291b35189ce29d3fff3','1.1','1.0');
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `schema_version` (
@@ -48,3 +49,4 @@ CREATE TABLE `schema_version` (
   PRIMARY KEY (`version_partition`,`db_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+INSERT INTO `schema_version` VALUES (0,'temporal_visibility','2023-02-03 18:17:51.229910','1.1','0.1');

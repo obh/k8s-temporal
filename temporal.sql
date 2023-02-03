@@ -1,6 +1,5 @@
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-use temporal;
 CREATE TABLE `activity_info_maps` (
   `shard_id` int NOT NULL,
   `namespace_id` binary(16) NOT NULL,
@@ -167,6 +166,7 @@ CREATE TABLE `namespace_metadata` (
   PRIMARY KEY (`partition_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+INSERT INTO `namespace_metadata` VALUES (54321,1);
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `namespaces` (
@@ -249,6 +249,7 @@ CREATE TABLE `schema_update_history` (
   PRIMARY KEY (`version_partition`,`year`,`month`,`update_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+INSERT INTO `schema_update_history` VALUES (0,2023,2,'2023-02-03 18:16:30.264844','initial version','','0.0','0'),(0,2023,2,'2023-02-03 18:16:39.850372','base version of schema','55b84ca114ac34d84bdc5f52c198fa33','1.0','0.0'),(0,2023,2,'2023-02-03 18:16:39.866165','schema update for cluster metadata','58f06841bbb187cb210db32a090c21ee','1.1','1.0'),(0,2023,2,'2023-02-03 18:16:40.132408','schema update for RPC replication and blob size adjustments','d0980c1ffb9ffa6e3ab6f84e285ffa9d','1.2','1.1'),(0,2023,2,'2023-02-03 18:16:40.136145','schema update for kafka deprecation','3beee7d470421674194475f94b58d89b','1.3','1.2'),(0,2023,2,'2023-02-03 18:16:40.143357','schema update for cluster metadata cleanup','c53e2e9cea5660c8a1f3b2ac73cdb138','1.4','1.3'),(0,2023,2,'2023-02-03 18:16:40.159232','schema update for cluster_membership, executions and history_node tables','bfb307ba10ac0fdec83e0065dc5ffee4','1.5','1.4'),(0,2023,2,'2023-02-03 18:16:40.162896','schema update for queue_metadata','978e1a6500d377ba91c6e37e5275a59b','1.6','1.5'),(0,2023,2,'2023-02-03 18:16:40.172045','create cluster metadata info table to store cluster information and executions to store tiered storage queue','366b8b49d6701a6a09778e51ad1682ed','1.7','1.6'),(0,2023,2,'2023-02-03 18:16:40.181069','drop unused tasks table; expand VARCHAR columns governed by maxIDLength to VARCHAR(255)','bc0761b792a339f7e1e29e00c4fd3e64','1.8','1.7'),(0,2023,2,'2023-02-03 18:16:40.187970','add history tasks table','b62e4e5826967e152e00b75da42d12ea','1.9','1.8');
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `schema_version` (
@@ -260,6 +261,7 @@ CREATE TABLE `schema_version` (
   PRIMARY KEY (`version_partition`,`db_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
+INSERT INTO `schema_version` VALUES (0,'temporal','2023-02-03 18:16:40.187539','1.9','1.0');
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `shards` (
