@@ -1,0 +1,1254 @@
+---
+# Source: temporal/templates/server-secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: temporaltest-default-store
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/part-of: temporal
+type: Opaque
+data:
+  password: "dGVtcG9yYWwuMTIz"
+---
+# Source: temporal/templates/server-secret.yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: temporaltest-visibility-store
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/part-of: temporal
+type: Opaque
+data:
+  password: "dGVtcG9yYWwuMTIz"
+---
+# Source: temporal/templates/server-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "temporaltest-frontend-config"
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/part-of: temporal
+data:
+  config_template.yaml: |-
+    log:
+      stdout: true
+      level: "debug,info"
+
+    persistence:
+      defaultStore: default
+      visibilityStore: visibility
+      numHistoryShards: 512
+      datastores:
+        default:
+          sql:
+            pluginName: "mysql"
+            driverName: "mysql"
+            databaseName: "temporal"
+            connectAddr: "mysql-service:3306"
+            connectProtocol: "tcp"
+            user: temporal
+            password: "{{ .Env.TEMPORAL_STORE_PASSWORD }}"
+            maxConnLifetime: 1h
+            maxConns: 20
+            secretName: ""
+        visibility:
+          sql:
+            pluginName: "mysql"
+            driverName: "mysql"
+            databaseName: "temporal_visibility"
+            connectAddr: "mysql-service:3306"
+            connectProtocol: "tcp"
+            user: "temporal"
+            password: "{{ .Env.TEMPORAL_VISIBILITY_STORE_PASSWORD }}"
+            maxConnLifetime: 1h
+            maxConns: 20
+            secretName: ""
+
+    global:
+      membership:
+        name: temporal
+        maxJoinDuration: 30s
+        broadcastAddress: {{ default .Env.POD_IP "0.0.0.0" }}
+
+      pprof:
+        port: 7936
+        
+      metrics:
+        tags:
+          type: frontend
+        prometheus:
+          timerType: histogram
+          listenAddress: "0.0.0.0:9090"
+
+
+    services:
+      frontend:
+        rpc:
+          grpcPort: 7233
+          membershipPort: 6933
+          bindOnIP: "0.0.0.0"
+
+      history:
+        rpc:
+          grpcPort: 7234
+          membershipPort: 6934
+          bindOnIP: "0.0.0.0"
+
+      matching:
+        rpc:
+          grpcPort: 7235
+          membershipPort: 6935
+          bindOnIP: "0.0.0.0"
+
+      worker:
+        rpc:
+          grpcPort: 7239
+          membershipPort: 6939
+          bindOnIP: "0.0.0.0"
+    clusterMetadata:
+      enableGlobalDomain: false
+      failoverVersionIncrement: 10
+      masterClusterName: "active"
+      currentClusterName: "active"
+      clusterInformation:
+        active:
+          enabled: true
+          initialFailoverVersion: 1
+          rpcName: "temporal-frontend"
+          rpcAddress: "127.0.0.1:7933"
+    dcRedirectionPolicy:
+      policy: "noop"
+      toDC: ""
+    archival:
+      status: "disabled"
+
+    publicClient:
+      hostPort: "temporaltest-frontend:7233"
+
+    dynamicConfigClient:
+      filepath: "/etc/temporal/dynamic_config/dynamic_config.yaml"
+      pollInterval: "10s"
+---
+# Source: temporal/templates/server-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "temporaltest-history-config"
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/part-of: temporal
+data:
+  config_template.yaml: |-
+    log:
+      stdout: true
+      level: "debug,info"
+
+    persistence:
+      defaultStore: default
+      visibilityStore: visibility
+      numHistoryShards: 512
+      datastores:
+        default:
+          sql:
+            pluginName: "mysql"
+            driverName: "mysql"
+            databaseName: "temporal"
+            connectAddr: "mysql-service:3306"
+            connectProtocol: "tcp"
+            user: temporal
+            password: "{{ .Env.TEMPORAL_STORE_PASSWORD }}"
+            maxConnLifetime: 1h
+            maxConns: 20
+            secretName: ""
+        visibility:
+          sql:
+            pluginName: "mysql"
+            driverName: "mysql"
+            databaseName: "temporal_visibility"
+            connectAddr: "mysql-service:3306"
+            connectProtocol: "tcp"
+            user: "temporal"
+            password: "{{ .Env.TEMPORAL_VISIBILITY_STORE_PASSWORD }}"
+            maxConnLifetime: 1h
+            maxConns: 20
+            secretName: ""
+
+    global:
+      membership:
+        name: temporal
+        maxJoinDuration: 30s
+        broadcastAddress: {{ default .Env.POD_IP "0.0.0.0" }}
+
+      pprof:
+        port: 7936
+        
+      metrics:
+        tags:
+          type: history
+        prometheus:
+          timerType: histogram
+          listenAddress: "0.0.0.0:9090"
+
+
+    services:
+      frontend:
+        rpc:
+          grpcPort: 7233
+          membershipPort: 6933
+          bindOnIP: "0.0.0.0"
+
+      history:
+        rpc:
+          grpcPort: 7234
+          membershipPort: 6934
+          bindOnIP: "0.0.0.0"
+
+      matching:
+        rpc:
+          grpcPort: 7235
+          membershipPort: 6935
+          bindOnIP: "0.0.0.0"
+
+      worker:
+        rpc:
+          grpcPort: 7239
+          membershipPort: 6939
+          bindOnIP: "0.0.0.0"
+    clusterMetadata:
+      enableGlobalDomain: false
+      failoverVersionIncrement: 10
+      masterClusterName: "active"
+      currentClusterName: "active"
+      clusterInformation:
+        active:
+          enabled: true
+          initialFailoverVersion: 1
+          rpcName: "temporal-frontend"
+          rpcAddress: "127.0.0.1:7933"
+    dcRedirectionPolicy:
+      policy: "noop"
+      toDC: ""
+    archival:
+      status: "disabled"
+
+    publicClient:
+      hostPort: "temporaltest-frontend:7233"
+
+    dynamicConfigClient:
+      filepath: "/etc/temporal/dynamic_config/dynamic_config.yaml"
+      pollInterval: "10s"
+---
+# Source: temporal/templates/server-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "temporaltest-matching-config"
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/part-of: temporal
+data:
+  config_template.yaml: |-
+    log:
+      stdout: true
+      level: "debug,info"
+
+    persistence:
+      defaultStore: default
+      visibilityStore: visibility
+      numHistoryShards: 512
+      datastores:
+        default:
+          sql:
+            pluginName: "mysql"
+            driverName: "mysql"
+            databaseName: "temporal"
+            connectAddr: "mysql-service:3306"
+            connectProtocol: "tcp"
+            user: temporal
+            password: "{{ .Env.TEMPORAL_STORE_PASSWORD }}"
+            maxConnLifetime: 1h
+            maxConns: 20
+            secretName: ""
+        visibility:
+          sql:
+            pluginName: "mysql"
+            driverName: "mysql"
+            databaseName: "temporal_visibility"
+            connectAddr: "mysql-service:3306"
+            connectProtocol: "tcp"
+            user: "temporal"
+            password: "{{ .Env.TEMPORAL_VISIBILITY_STORE_PASSWORD }}"
+            maxConnLifetime: 1h
+            maxConns: 20
+            secretName: ""
+
+    global:
+      membership:
+        name: temporal
+        maxJoinDuration: 30s
+        broadcastAddress: {{ default .Env.POD_IP "0.0.0.0" }}
+
+      pprof:
+        port: 7936
+        
+      metrics:
+        tags:
+          type: matching
+        prometheus:
+          timerType: histogram
+          listenAddress: "0.0.0.0:9090"
+
+
+    services:
+      frontend:
+        rpc:
+          grpcPort: 7233
+          membershipPort: 6933
+          bindOnIP: "0.0.0.0"
+
+      history:
+        rpc:
+          grpcPort: 7234
+          membershipPort: 6934
+          bindOnIP: "0.0.0.0"
+
+      matching:
+        rpc:
+          grpcPort: 7235
+          membershipPort: 6935
+          bindOnIP: "0.0.0.0"
+
+      worker:
+        rpc:
+          grpcPort: 7239
+          membershipPort: 6939
+          bindOnIP: "0.0.0.0"
+    clusterMetadata:
+      enableGlobalDomain: false
+      failoverVersionIncrement: 10
+      masterClusterName: "active"
+      currentClusterName: "active"
+      clusterInformation:
+        active:
+          enabled: true
+          initialFailoverVersion: 1
+          rpcName: "temporal-frontend"
+          rpcAddress: "127.0.0.1:7933"
+    dcRedirectionPolicy:
+      policy: "noop"
+      toDC: ""
+    archival:
+      status: "disabled"
+
+    publicClient:
+      hostPort: "temporaltest-frontend:7233"
+
+    dynamicConfigClient:
+      filepath: "/etc/temporal/dynamic_config/dynamic_config.yaml"
+      pollInterval: "10s"
+---
+# Source: temporal/templates/server-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "temporaltest-worker-config"
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/part-of: temporal
+data:
+  config_template.yaml: |-
+    log:
+      stdout: true
+      level: "debug,info"
+
+    persistence:
+      defaultStore: default
+      visibilityStore: visibility
+      numHistoryShards: 512
+      datastores:
+        default:
+          sql:
+            pluginName: "mysql"
+            driverName: "mysql"
+            databaseName: "temporal"
+            connectAddr: "mysql-service:3306"
+            connectProtocol: "tcp"
+            user: temporal
+            password: "{{ .Env.TEMPORAL_STORE_PASSWORD }}"
+            maxConnLifetime: 1h
+            maxConns: 20
+            secretName: ""
+        visibility:
+          sql:
+            pluginName: "mysql"
+            driverName: "mysql"
+            databaseName: "temporal_visibility"
+            connectAddr: "mysql-service:3306"
+            connectProtocol: "tcp"
+            user: "temporal"
+            password: "{{ .Env.TEMPORAL_VISIBILITY_STORE_PASSWORD }}"
+            maxConnLifetime: 1h
+            maxConns: 20
+            secretName: ""
+
+    global:
+      membership:
+        name: temporal
+        maxJoinDuration: 30s
+        broadcastAddress: {{ default .Env.POD_IP "0.0.0.0" }}
+
+      pprof:
+        port: 7936
+        
+      metrics:
+        tags:
+          type: worker
+        prometheus:
+          timerType: histogram
+          listenAddress: "0.0.0.0:9090"
+
+
+    services:
+      frontend:
+        rpc:
+          grpcPort: 7233
+          membershipPort: 6933
+          bindOnIP: "0.0.0.0"
+
+      history:
+        rpc:
+          grpcPort: 7234
+          membershipPort: 6934
+          bindOnIP: "0.0.0.0"
+
+      matching:
+        rpc:
+          grpcPort: 7235
+          membershipPort: 6935
+          bindOnIP: "0.0.0.0"
+
+      worker:
+        rpc:
+          grpcPort: 7239
+          membershipPort: 6939
+          bindOnIP: "0.0.0.0"
+    clusterMetadata:
+      enableGlobalDomain: false
+      failoverVersionIncrement: 10
+      masterClusterName: "active"
+      currentClusterName: "active"
+      clusterInformation:
+        active:
+          enabled: true
+          initialFailoverVersion: 1
+          rpcName: "temporal-frontend"
+          rpcAddress: "127.0.0.1:7933"
+    dcRedirectionPolicy:
+      policy: "noop"
+      toDC: ""
+    archival:
+      status: "disabled"
+
+    publicClient:
+      hostPort: "temporaltest-frontend:7233"
+
+    dynamicConfigClient:
+      filepath: "/etc/temporal/dynamic_config/dynamic_config.yaml"
+      pollInterval: "10s"
+---
+# Source: temporal/templates/server-dynamicconfigmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "temporaltest-dynamic-config"
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/part-of: temporal
+data:
+  dynamic_config.yaml: |-
+---
+# Source: temporal/templates/web-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: temporaltest-web-config
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/component: web
+    app.kubernetes.io/part-of: temporal
+data:
+  config.yml: |
+    auth:
+      enabled: false
+    routing:
+      default_to_namespace: null
+      issue_report_link: https://github.com/temporalio/web/issues/new/choose
+---
+# Source: temporal/templates/admintools-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: temporaltest-admintools
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/component: admintools
+    app.kubernetes.io/part-of: temporal
+spec:
+  type: ClusterIP 
+  ports:
+    - port: 22
+      targetPort: 22
+      protocol: TCP
+      name: ssh
+
+  selector:
+    app.kubernetes.io/name: temporal
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/component: admintools
+---
+# Source: temporal/templates/server-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: temporaltest-frontend
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: temporal
+spec:
+  type: ClusterIP
+  ports:
+    - port: 7233
+      targetPort: rpc
+      protocol: TCP
+      name: grpc-rpc
+  selector:
+    app.kubernetes.io/name: temporal
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/component: frontend
+---
+# Source: temporal/templates/server-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: temporaltest-frontend-headless
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: temporal
+    app.kubernetes.io/headless: 'true'
+    prometheus.io/job: temporal-frontend
+    prometheus.io/scrape: 'true'
+    prometheus.io/scheme: http
+    prometheus.io/port: "9090"
+
+  annotations:
+    # Use this annotation in addition to the actual field below because the
+    # annotation will stop being respected soon but the field is broken in
+    # some versions of Kubernetes:
+    # https://github.com/kubernetes/kubernetes/issues/58662
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+spec:
+  type: ClusterIP
+  clusterIP: None
+  publishNotReadyAddresses: true
+  ports:
+    - port: 7233
+      targetPort: rpc
+      protocol: TCP
+      name: grpc-rpc
+    - port: 9090
+      targetPort: metrics
+      protocol: TCP
+      name: metrics
+  selector:
+    app.kubernetes.io/name: temporal
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/component: frontend
+---
+# Source: temporal/templates/server-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: temporaltest-matching-headless
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/component: matching
+    app.kubernetes.io/part-of: temporal
+    app.kubernetes.io/headless: 'true'
+    prometheus.io/job: temporal-matching
+    prometheus.io/scrape: 'true'
+    prometheus.io/scheme: http
+    prometheus.io/port: "9090"
+
+  annotations:
+    # Use this annotation in addition to the actual field below because the
+    # annotation will stop being respected soon but the field is broken in
+    # some versions of Kubernetes:
+    # https://github.com/kubernetes/kubernetes/issues/58662
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+spec:
+  type: ClusterIP
+  clusterIP: None
+  publishNotReadyAddresses: true
+  ports:
+    - port: 7235
+      targetPort: rpc
+      protocol: TCP
+      name: grpc-rpc
+    - port: 9090
+      targetPort: metrics
+      protocol: TCP
+      name: metrics
+  selector:
+    app.kubernetes.io/name: temporal
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/component: matching
+---
+# Source: temporal/templates/server-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: temporaltest-history-headless
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/component: history
+    app.kubernetes.io/part-of: temporal
+    app.kubernetes.io/headless: 'true'
+    prometheus.io/job: temporal-history
+    prometheus.io/scrape: 'true'
+    prometheus.io/scheme: http
+    prometheus.io/port: "9090"
+
+  annotations:
+    # Use this annotation in addition to the actual field below because the
+    # annotation will stop being respected soon but the field is broken in
+    # some versions of Kubernetes:
+    # https://github.com/kubernetes/kubernetes/issues/58662
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+spec:
+  type: ClusterIP
+  clusterIP: None
+  publishNotReadyAddresses: true
+  ports:
+    - port: 7234
+      targetPort: rpc
+      protocol: TCP
+      name: grpc-rpc
+    - port: 9090
+      targetPort: metrics
+      protocol: TCP
+      name: metrics
+  selector:
+    app.kubernetes.io/name: temporal
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/component: history
+---
+# Source: temporal/templates/server-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: temporaltest-worker-headless
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/component: worker
+    app.kubernetes.io/part-of: temporal
+    app.kubernetes.io/headless: 'true'
+    prometheus.io/job: temporal-worker
+    prometheus.io/scrape: 'true'
+    prometheus.io/scheme: http
+    prometheus.io/port: "9090"
+
+  annotations:
+    # Use this annotation in addition to the actual field below because the
+    # annotation will stop being respected soon but the field is broken in
+    # some versions of Kubernetes:
+    # https://github.com/kubernetes/kubernetes/issues/58662
+    service.alpha.kubernetes.io/tolerate-unready-endpoints: "true"
+spec:
+  type: ClusterIP
+  clusterIP: None
+  publishNotReadyAddresses: true
+  ports:
+    - port: 7239
+      targetPort: rpc
+      protocol: TCP
+      name: grpc-rpc
+    - port: 9090
+      targetPort: metrics
+      protocol: TCP
+      name: metrics
+  selector:
+    app.kubernetes.io/name: temporal
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/component: worker
+---
+# Source: temporal/templates/web-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: temporaltest-web
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/component: web
+    app.kubernetes.io/part-of: temporal
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: temporal
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/component: web
+---
+# Source: temporal/templates/admintools-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: temporaltest-admintools
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/component: admintools
+    app.kubernetes.io/part-of: temporal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: temporal
+      app.kubernetes.io/instance: temporaltest
+      app.kubernetes.io/component: admintools
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: temporal
+        helm.sh/chart: temporal-0.19.1
+        app.kubernetes.io/instance: temporaltest
+        app.kubernetes.io/version: 1.19.1
+        app.kubernetes.io/component: admintools
+        app.kubernetes.io/part-of: temporal
+    spec:
+      
+      containers:
+        - name: admin-tools
+          image: "temporalio/admin-tools:1.19.1"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 22
+              protocol: TCP
+          env:
+            - name: TEMPORAL_CLI_ADDRESS
+              value: temporaltest-frontend:7233
+          livenessProbe:
+              exec:
+                command:
+                - ls
+                - /
+              initialDelaySeconds: 5
+              periodSeconds: 5
+---
+# Source: temporal/templates/server-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: temporaltest-frontend
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/component: frontend
+    app.kubernetes.io/part-of: temporal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: temporal
+      app.kubernetes.io/instance: temporaltest
+      app.kubernetes.io/component: frontend
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: temporal
+        helm.sh/chart: temporal-0.19.1
+        app.kubernetes.io/instance: temporaltest
+        app.kubernetes.io/version: 1.19.1
+        app.kubernetes.io/component: frontend
+        app.kubernetes.io/part-of: temporal
+      annotations:
+        checksum/config: db992c3faf6b2a6c31cbd56c78a9fe3b3dc0d0cd091334670f72e98574cf356b
+        prometheus.io/job: temporal-frontend
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9090'
+    spec:
+      
+      containers:
+        - name: temporal-frontend
+          image: "temporalio/server:1.19.1"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: ENABLE_ES
+              value: ""
+            - name: ES_SEEDS
+              value: "elasticsearch-master-headless"
+            - name: ES_PORT
+              value: "9200"
+            - name: ES_VERSION
+              value: "v7"
+            - name: ES_SCHEME
+              value: "http"
+            - name: ES_VIS_INDEX
+              value: "temporal_visibility_v1_dev"
+            - name: ES_USER
+              value: ""
+            - name: ES_PWD
+              value: ""
+            - name: SERVICES
+              value: frontend
+            - name: TEMPORAL_STORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: temporaltest-default-store
+                  key: password
+            - name: TEMPORAL_VISIBILITY_STORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: temporaltest-visibility-store
+                  key: password
+          ports:
+            - name: rpc
+              containerPort: 7233
+              protocol: TCP
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+          livenessProbe:
+             initialDelaySeconds: 150
+             tcpSocket:
+               port: rpc
+          volumeMounts:
+            - name: config
+              mountPath: /etc/temporal/config/config_template.yaml
+              subPath: config_template.yaml
+            - name: dynamic-config
+              mountPath: /etc/temporal/dynamic_config
+          resources:
+            {}
+      volumes:
+        - name: config
+          configMap:
+            name: "temporaltest-frontend-config"
+        - name: dynamic-config
+          configMap:
+            name: "temporaltest-dynamic-config"
+            items:
+            - key: dynamic_config.yaml
+              path: dynamic_config.yaml
+---
+# Source: temporal/templates/server-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: temporaltest-history
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/component: history
+    app.kubernetes.io/part-of: temporal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: temporal
+      app.kubernetes.io/instance: temporaltest
+      app.kubernetes.io/component: history
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: temporal
+        helm.sh/chart: temporal-0.19.1
+        app.kubernetes.io/instance: temporaltest
+        app.kubernetes.io/version: 1.19.1
+        app.kubernetes.io/component: history
+        app.kubernetes.io/part-of: temporal
+      annotations:
+        checksum/config: db992c3faf6b2a6c31cbd56c78a9fe3b3dc0d0cd091334670f72e98574cf356b
+        prometheus.io/job: temporal-history
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9090'
+    spec:
+      
+      containers:
+        - name: temporal-history
+          image: "temporalio/server:1.19.1"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: ENABLE_ES
+              value: ""
+            - name: ES_SEEDS
+              value: "elasticsearch-master-headless"
+            - name: ES_PORT
+              value: "9200"
+            - name: ES_VERSION
+              value: "v7"
+            - name: ES_SCHEME
+              value: "http"
+            - name: ES_VIS_INDEX
+              value: "temporal_visibility_v1_dev"
+            - name: ES_USER
+              value: ""
+            - name: ES_PWD
+              value: ""
+            - name: SERVICES
+              value: history
+            - name: TEMPORAL_STORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: temporaltest-default-store
+                  key: password
+            - name: TEMPORAL_VISIBILITY_STORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: temporaltest-visibility-store
+                  key: password
+          ports:
+            - name: rpc
+              containerPort: 7234
+              protocol: TCP
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+          livenessProbe:
+             initialDelaySeconds: 150
+             tcpSocket:
+               port: rpc
+          volumeMounts:
+            - name: config
+              mountPath: /etc/temporal/config/config_template.yaml
+              subPath: config_template.yaml
+            - name: dynamic-config
+              mountPath: /etc/temporal/dynamic_config
+          resources:
+            {}
+      volumes:
+        - name: config
+          configMap:
+            name: "temporaltest-history-config"
+        - name: dynamic-config
+          configMap:
+            name: "temporaltest-dynamic-config"
+            items:
+            - key: dynamic_config.yaml
+              path: dynamic_config.yaml
+---
+# Source: temporal/templates/server-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: temporaltest-matching
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/component: matching
+    app.kubernetes.io/part-of: temporal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: temporal
+      app.kubernetes.io/instance: temporaltest
+      app.kubernetes.io/component: matching
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: temporal
+        helm.sh/chart: temporal-0.19.1
+        app.kubernetes.io/instance: temporaltest
+        app.kubernetes.io/version: 1.19.1
+        app.kubernetes.io/component: matching
+        app.kubernetes.io/part-of: temporal
+      annotations:
+        checksum/config: db992c3faf6b2a6c31cbd56c78a9fe3b3dc0d0cd091334670f72e98574cf356b
+        prometheus.io/job: temporal-matching
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9090'
+    spec:
+      
+      containers:
+        - name: temporal-matching
+          image: "temporalio/server:1.19.1"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: ENABLE_ES
+              value: ""
+            - name: ES_SEEDS
+              value: "elasticsearch-master-headless"
+            - name: ES_PORT
+              value: "9200"
+            - name: ES_VERSION
+              value: "v7"
+            - name: ES_SCHEME
+              value: "http"
+            - name: ES_VIS_INDEX
+              value: "temporal_visibility_v1_dev"
+            - name: ES_USER
+              value: ""
+            - name: ES_PWD
+              value: ""
+            - name: SERVICES
+              value: matching
+            - name: TEMPORAL_STORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: temporaltest-default-store
+                  key: password
+            - name: TEMPORAL_VISIBILITY_STORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: temporaltest-visibility-store
+                  key: password
+          ports:
+            - name: rpc
+              containerPort: 7235
+              protocol: TCP
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+          livenessProbe:
+             initialDelaySeconds: 150
+             tcpSocket:
+               port: rpc
+          volumeMounts:
+            - name: config
+              mountPath: /etc/temporal/config/config_template.yaml
+              subPath: config_template.yaml
+            - name: dynamic-config
+              mountPath: /etc/temporal/dynamic_config
+          resources:
+            {}
+      volumes:
+        - name: config
+          configMap:
+            name: "temporaltest-matching-config"
+        - name: dynamic-config
+          configMap:
+            name: "temporaltest-dynamic-config"
+            items:
+            - key: dynamic_config.yaml
+              path: dynamic_config.yaml
+---
+# Source: temporal/templates/server-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: temporaltest-worker
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/component: worker
+    app.kubernetes.io/part-of: temporal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: temporal
+      app.kubernetes.io/instance: temporaltest
+      app.kubernetes.io/component: worker
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: temporal
+        helm.sh/chart: temporal-0.19.1
+        app.kubernetes.io/instance: temporaltest
+        app.kubernetes.io/version: 1.19.1
+        app.kubernetes.io/component: worker
+        app.kubernetes.io/part-of: temporal
+      annotations:
+        checksum/config: db992c3faf6b2a6c31cbd56c78a9fe3b3dc0d0cd091334670f72e98574cf356b
+        prometheus.io/job: temporal-worker
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '9090'
+    spec:
+      
+      containers:
+        - name: temporal-worker
+          image: "temporalio/server:1.19.1"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: ENABLE_ES
+              value: ""
+            - name: ES_SEEDS
+              value: "elasticsearch-master-headless"
+            - name: ES_PORT
+              value: "9200"
+            - name: ES_VERSION
+              value: "v7"
+            - name: ES_SCHEME
+              value: "http"
+            - name: ES_VIS_INDEX
+              value: "temporal_visibility_v1_dev"
+            - name: ES_USER
+              value: ""
+            - name: ES_PWD
+              value: ""
+            - name: SERVICES
+              value: worker
+            - name: TEMPORAL_STORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: temporaltest-default-store
+                  key: password
+            - name: TEMPORAL_VISIBILITY_STORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: temporaltest-visibility-store
+                  key: password
+          ports:
+            - name: rpc
+              containerPort: 7239
+              protocol: TCP
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+          volumeMounts:
+            - name: config
+              mountPath: /etc/temporal/config/config_template.yaml
+              subPath: config_template.yaml
+            - name: dynamic-config
+              mountPath: /etc/temporal/dynamic_config
+          resources:
+            {}
+      volumes:
+        - name: config
+          configMap:
+            name: "temporaltest-worker-config"
+        - name: dynamic-config
+          configMap:
+            name: "temporaltest-dynamic-config"
+            items:
+            - key: dynamic_config.yaml
+              path: dynamic_config.yaml
+---
+# Source: temporal/templates/web-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: temporaltest-web
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/component: web
+    app.kubernetes.io/part-of: temporal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: temporal
+      app.kubernetes.io/instance: temporaltest
+      app.kubernetes.io/component: web
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: temporal
+        helm.sh/chart: temporal-0.19.1
+        app.kubernetes.io/instance: temporaltest
+        app.kubernetes.io/version: 1.19.1
+        app.kubernetes.io/component: web
+        app.kubernetes.io/part-of: temporal
+    spec:
+      
+      volumes:
+        - name: temporal-web-config
+          configMap:
+            name: temporaltest-web-config
+      containers:
+        - name: temporal-web
+          image: "temporalio/ui:2.9.0"
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: TEMPORAL_ADDRESS
+              value: "temporaltest-frontend.default.svc:7233"
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          resources:
+            {}
