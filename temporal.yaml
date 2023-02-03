@@ -7,6 +7,7 @@ metadata:
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/part-of: temporal
@@ -22,6 +23,7 @@ metadata:
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/part-of: temporal
@@ -37,6 +39,7 @@ metadata:
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/part-of: temporal
@@ -56,7 +59,7 @@ data:
             pluginName: "mysql"
             driverName: "mysql"
             databaseName: "temporal"
-            connectAddr: "mysql-service:3306"
+            connectAddr: "mysql:3306"
             connectProtocol: "tcp"
             user: temporal
             password: "{{ .Env.TEMPORAL_STORE_PASSWORD }}"
@@ -68,7 +71,7 @@ data:
             pluginName: "mysql"
             driverName: "mysql"
             databaseName: "temporal_visibility"
-            connectAddr: "mysql-service:3306"
+            connectAddr: "mysql:3306"
             connectProtocol: "tcp"
             user: "temporal"
             password: "{{ .Env.TEMPORAL_VISIBILITY_STORE_PASSWORD }}"
@@ -149,6 +152,7 @@ metadata:
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/part-of: temporal
@@ -168,7 +172,7 @@ data:
             pluginName: "mysql"
             driverName: "mysql"
             databaseName: "temporal"
-            connectAddr: "mysql-service:3306"
+            connectAddr: "mysql:3306"
             connectProtocol: "tcp"
             user: temporal
             password: "{{ .Env.TEMPORAL_STORE_PASSWORD }}"
@@ -180,7 +184,7 @@ data:
             pluginName: "mysql"
             driverName: "mysql"
             databaseName: "temporal_visibility"
-            connectAddr: "mysql-service:3306"
+            connectAddr: "mysql:3306"
             connectProtocol: "tcp"
             user: "temporal"
             password: "{{ .Env.TEMPORAL_VISIBILITY_STORE_PASSWORD }}"
@@ -261,6 +265,7 @@ metadata:
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/part-of: temporal
@@ -280,7 +285,7 @@ data:
             pluginName: "mysql"
             driverName: "mysql"
             databaseName: "temporal"
-            connectAddr: "mysql-service:3306"
+            connectAddr: "mysql:3306"
             connectProtocol: "tcp"
             user: temporal
             password: "{{ .Env.TEMPORAL_STORE_PASSWORD }}"
@@ -292,7 +297,7 @@ data:
             pluginName: "mysql"
             driverName: "mysql"
             databaseName: "temporal_visibility"
-            connectAddr: "mysql-service:3306"
+            connectAddr: "mysql:3306"
             connectProtocol: "tcp"
             user: "temporal"
             password: "{{ .Env.TEMPORAL_VISIBILITY_STORE_PASSWORD }}"
@@ -373,6 +378,7 @@ metadata:
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/part-of: temporal
@@ -392,7 +398,7 @@ data:
             pluginName: "mysql"
             driverName: "mysql"
             databaseName: "temporal"
-            connectAddr: "mysql-service:3306"
+            connectAddr: "mysql:3306"
             connectProtocol: "tcp"
             user: temporal
             password: "{{ .Env.TEMPORAL_STORE_PASSWORD }}"
@@ -404,7 +410,7 @@ data:
             pluginName: "mysql"
             driverName: "mysql"
             databaseName: "temporal_visibility"
-            connectAddr: "mysql-service:3306"
+            connectAddr: "mysql:3306"
             connectProtocol: "tcp"
             user: "temporal"
             password: "{{ .Env.TEMPORAL_VISIBILITY_STORE_PASSWORD }}"
@@ -485,6 +491,7 @@ metadata:
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/part-of: temporal
@@ -499,6 +506,7 @@ metadata:
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: web
@@ -519,6 +527,7 @@ metadata:
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: admintools
@@ -544,6 +553,7 @@ metadata:
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: frontend
@@ -568,6 +578,7 @@ metadata:
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: frontend
@@ -610,6 +621,7 @@ metadata:
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: matching
@@ -652,6 +664,7 @@ metadata:
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: history
@@ -694,6 +707,7 @@ metadata:
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: worker
@@ -736,6 +750,7 @@ metadata:
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: web
@@ -760,6 +775,7 @@ metadata:
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: admintools
@@ -776,6 +792,7 @@ spec:
       labels:
         app.kubernetes.io/name: temporal
         helm.sh/chart: temporal-0.19.1
+        app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/instance: temporaltest
         app.kubernetes.io/version: 1.19.1
         app.kubernetes.io/component: admintools
@@ -809,6 +826,7 @@ metadata:
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: frontend
@@ -825,12 +843,13 @@ spec:
       labels:
         app.kubernetes.io/name: temporal
         helm.sh/chart: temporal-0.19.1
+        app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/instance: temporaltest
         app.kubernetes.io/version: 1.19.1
         app.kubernetes.io/component: frontend
         app.kubernetes.io/part-of: temporal
       annotations:
-        checksum/config: db992c3faf6b2a6c31cbd56c78a9fe3b3dc0d0cd091334670f72e98574cf356b
+        checksum/config: b4f85455c6c6cd55079d65984fddd0243f54fdc8fe5fa2c79b80b49f10f04f20
         prometheus.io/job: temporal-frontend
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9090'
@@ -911,6 +930,7 @@ metadata:
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: history
@@ -927,12 +947,13 @@ spec:
       labels:
         app.kubernetes.io/name: temporal
         helm.sh/chart: temporal-0.19.1
+        app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/instance: temporaltest
         app.kubernetes.io/version: 1.19.1
         app.kubernetes.io/component: history
         app.kubernetes.io/part-of: temporal
       annotations:
-        checksum/config: db992c3faf6b2a6c31cbd56c78a9fe3b3dc0d0cd091334670f72e98574cf356b
+        checksum/config: b4f85455c6c6cd55079d65984fddd0243f54fdc8fe5fa2c79b80b49f10f04f20
         prometheus.io/job: temporal-history
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9090'
@@ -1013,6 +1034,7 @@ metadata:
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: matching
@@ -1029,12 +1051,13 @@ spec:
       labels:
         app.kubernetes.io/name: temporal
         helm.sh/chart: temporal-0.19.1
+        app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/instance: temporaltest
         app.kubernetes.io/version: 1.19.1
         app.kubernetes.io/component: matching
         app.kubernetes.io/part-of: temporal
       annotations:
-        checksum/config: db992c3faf6b2a6c31cbd56c78a9fe3b3dc0d0cd091334670f72e98574cf356b
+        checksum/config: b4f85455c6c6cd55079d65984fddd0243f54fdc8fe5fa2c79b80b49f10f04f20
         prometheus.io/job: temporal-matching
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9090'
@@ -1115,6 +1138,7 @@ metadata:
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: worker
@@ -1131,12 +1155,13 @@ spec:
       labels:
         app.kubernetes.io/name: temporal
         helm.sh/chart: temporal-0.19.1
+        app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/instance: temporaltest
         app.kubernetes.io/version: 1.19.1
         app.kubernetes.io/component: worker
         app.kubernetes.io/part-of: temporal
       annotations:
-        checksum/config: db992c3faf6b2a6c31cbd56c78a9fe3b3dc0d0cd091334670f72e98574cf356b
+        checksum/config: b4f85455c6c6cd55079d65984fddd0243f54fdc8fe5fa2c79b80b49f10f04f20
         prometheus.io/job: temporal-worker
         prometheus.io/scrape: 'true'
         prometheus.io/port: '9090'
@@ -1213,6 +1238,7 @@ metadata:
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/managed-by: Helm
     app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: web
@@ -1229,6 +1255,7 @@ spec:
       labels:
         app.kubernetes.io/name: temporal
         helm.sh/chart: temporal-0.19.1
+        app.kubernetes.io/managed-by: Helm
         app.kubernetes.io/instance: temporaltest
         app.kubernetes.io/version: 1.19.1
         app.kubernetes.io/component: web
@@ -1252,3 +1279,50 @@ spec:
               protocol: TCP
           resources:
             {}
+---
+# Source: temporal/templates/server-job.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: temporaltest-schema-setup
+  labels:
+    app.kubernetes.io/name: temporal
+    helm.sh/chart: temporal-0.19.1
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/component: database
+    app.kubernetes.io/part-of: temporal
+  annotations:
+    "helm.sh/hook": pre-install
+    "helm.sh/hook-weight": "0"
+    "helm.sh/hook-delete-policy": hook-succeeded,hook-failed
+spec:
+  backoffLimit: 100
+  template:
+    metadata:
+      name: temporaltest-schema-setup
+      labels:
+        app.kubernetes.io/name: temporal
+        helm.sh/chart: temporal-0.19.1
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/instance: temporaltest
+        app.kubernetes.io/version: 1.19.1
+        app.kubernetes.io/component: database
+        app.kubernetes.io/part-of: temporal
+    spec:
+      
+      restartPolicy: "OnFailure"
+      initContainers:
+          []
+      containers:
+        - name: default-schema
+          image: "temporalio/admin-tools:1.19.1"
+          imagePullPolicy: IfNotPresent
+          command: ["temporal-sql-tool", "setup-schema", "-v", "0.0"]
+          env:
+        - name: visibility-schema
+          image: "temporalio/admin-tools:1.19.1"
+          imagePullPolicy: IfNotPresent
+          command: ["temporal-sql-tool", "setup-schema", "-v", "0.0"]
+          env:
