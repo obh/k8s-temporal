@@ -1,5 +1,6 @@
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
+use temporal;
 CREATE TABLE `activity_info_maps` (
   `shard_id` int NOT NULL,
   `namespace_id` binary(16) NOT NULL,
