@@ -3,28 +3,27 @@
 apiVersion: v1
 kind: Secret
 metadata:
-  name: temporaltest-default-store
+  name: temporal-default-store
+  namespace: temporal
   labels:
-    app.kubernetes.io/name: temporal
-    helm.sh/chart: temporal-0.19.1
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: temporaltest
-    app.kubernetes.io/version: 1.19.1
+    app.kubernetes.io/name: temporal        
+    app.kubernetes.io/instance: temporal
+    app.kubernetes.io/version: 1.19.1    
     app.kubernetes.io/part-of: temporal
 type: Opaque
 data:
   password: "dGVtcG9yYWwuMTIz"
+
 ---
 # Source: temporal/templates/server-secret.yaml
 apiVersion: v1
 kind: Secret
 metadata:
-  name: temporaltest-visibility-store
+  name: temporal-visibility-store
+  namespace: temporal
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/part-of: temporal
 type: Opaque
@@ -35,12 +34,12 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: "temporaltest-frontend-config"
+  name: "temporal-frontend-config"
+  namespace: temporal
+
   labels:
     app.kubernetes.io/name: temporal
-    helm.sh/chart: temporal-0.19.1
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: temporaltest
+    helm.sh/chart: temporal-0.19.1        
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/part-of: temporal
 data:
@@ -59,7 +58,7 @@ data:
             pluginName: "mysql"
             driverName: "mysql"
             databaseName: "temporal"
-            connectAddr: "mysql:3306"
+            connectAddr: "mysql.default:3306"
             connectProtocol: "tcp"
             user: temporal
             password: "{{ .Env.TEMPORAL_STORE_PASSWORD }}"
@@ -71,7 +70,7 @@ data:
             pluginName: "mysql"
             driverName: "mysql"
             databaseName: "temporal_visibility"
-            connectAddr: "mysql:3306"
+            connectAddr: "mysql.default:3306"
             connectProtocol: "tcp"
             user: "temporal"
             password: "{{ .Env.TEMPORAL_VISIBILITY_STORE_PASSWORD }}"
@@ -138,7 +137,7 @@ data:
       status: "disabled"
 
     publicClient:
-      hostPort: "temporaltest-frontend:7233"
+      hostPort: "temporal-frontend:7233"
 
     dynamicConfigClient:
       filepath: "/etc/temporal/dynamic_config/dynamic_config.yaml"
@@ -148,12 +147,11 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: "temporaltest-history-config"
+  name: "temporal-history-config"
+  namespace: temporal
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/part-of: temporal
 data:
@@ -172,7 +170,7 @@ data:
             pluginName: "mysql"
             driverName: "mysql"
             databaseName: "temporal"
-            connectAddr: "mysql:3306"
+            connectAddr: "mysql.default:3306"
             connectProtocol: "tcp"
             user: temporal
             password: "{{ .Env.TEMPORAL_STORE_PASSWORD }}"
@@ -184,7 +182,7 @@ data:
             pluginName: "mysql"
             driverName: "mysql"
             databaseName: "temporal_visibility"
-            connectAddr: "mysql:3306"
+            connectAddr: "mysql.default:3306"
             connectProtocol: "tcp"
             user: "temporal"
             password: "{{ .Env.TEMPORAL_VISIBILITY_STORE_PASSWORD }}"
@@ -251,7 +249,7 @@ data:
       status: "disabled"
 
     publicClient:
-      hostPort: "temporaltest-frontend:7233"
+      hostPort: "temporal-frontend:7233"
 
     dynamicConfigClient:
       filepath: "/etc/temporal/dynamic_config/dynamic_config.yaml"
@@ -261,12 +259,11 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: "temporaltest-matching-config"
+  name: "temporal-matching-config"
+  namespace: temporal
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/part-of: temporal
 data:
@@ -285,7 +282,7 @@ data:
             pluginName: "mysql"
             driverName: "mysql"
             databaseName: "temporal"
-            connectAddr: "mysql:3306"
+            connectAddr: "mysql.default:3306"
             connectProtocol: "tcp"
             user: temporal
             password: "{{ .Env.TEMPORAL_STORE_PASSWORD }}"
@@ -297,7 +294,7 @@ data:
             pluginName: "mysql"
             driverName: "mysql"
             databaseName: "temporal_visibility"
-            connectAddr: "mysql:3306"
+            connectAddr: "mysql.default:3306"
             connectProtocol: "tcp"
             user: "temporal"
             password: "{{ .Env.TEMPORAL_VISIBILITY_STORE_PASSWORD }}"
@@ -364,7 +361,7 @@ data:
       status: "disabled"
 
     publicClient:
-      hostPort: "temporaltest-frontend:7233"
+      hostPort: "temporal-frontend:7233"
 
     dynamicConfigClient:
       filepath: "/etc/temporal/dynamic_config/dynamic_config.yaml"
@@ -374,12 +371,10 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: "temporaltest-worker-config"
+  name: "temporal-worker-config"
+  namespace: temporal
   labels:
     app.kubernetes.io/name: temporal
-    helm.sh/chart: temporal-0.19.1
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/part-of: temporal
 data:
@@ -398,7 +393,7 @@ data:
             pluginName: "mysql"
             driverName: "mysql"
             databaseName: "temporal"
-            connectAddr: "mysql:3306"
+            connectAddr: "mysql.default:3306"
             connectProtocol: "tcp"
             user: temporal
             password: "{{ .Env.TEMPORAL_STORE_PASSWORD }}"
@@ -410,7 +405,7 @@ data:
             pluginName: "mysql"
             driverName: "mysql"
             databaseName: "temporal_visibility"
-            connectAddr: "mysql:3306"
+            connectAddr: "mysql.default:3306"
             connectProtocol: "tcp"
             user: "temporal"
             password: "{{ .Env.TEMPORAL_VISIBILITY_STORE_PASSWORD }}"
@@ -477,7 +472,7 @@ data:
       status: "disabled"
 
     publicClient:
-      hostPort: "temporaltest-frontend:7233"
+      hostPort: "temporal-frontend:7233"
 
     dynamicConfigClient:
       filepath: "/etc/temporal/dynamic_config/dynamic_config.yaml"
@@ -487,12 +482,10 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: "temporaltest-dynamic-config"
+  name: "temporal-dynamic-config"
+  namespace: temporal
   labels:
     app.kubernetes.io/name: temporal
-    helm.sh/chart: temporal-0.19.1
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/part-of: temporal
 data:
@@ -502,12 +495,11 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: temporaltest-web-config
+  name: temporal-web-config
+  namespace: temporal
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: web
     app.kubernetes.io/part-of: temporal
@@ -523,12 +515,11 @@ data:
 apiVersion: v1
 kind: Service
 metadata:
-  name: temporaltest-admintools
+  name: temporal-admintools
+  namespace: temporal
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: admintools
     app.kubernetes.io/part-of: temporal
@@ -542,19 +533,17 @@ spec:
 
   selector:
     app.kubernetes.io/name: temporal
-    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/instance: temporal
     app.kubernetes.io/component: admintools
 ---
 # Source: temporal/templates/server-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: temporaltest-frontend
+  name: temporal-frontend
+  namespace: temporal
   labels:
     app.kubernetes.io/name: temporal
-    helm.sh/chart: temporal-0.19.1
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: frontend
     app.kubernetes.io/part-of: temporal
@@ -567,19 +556,18 @@ spec:
       name: grpc-rpc
   selector:
     app.kubernetes.io/name: temporal
-    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/instance: temporal
     app.kubernetes.io/component: frontend
 ---
 # Source: temporal/templates/server-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: temporaltest-frontend-headless
+  name: temporal-frontend-headless
+  namespace: temporal
   labels:
     app.kubernetes.io/name: temporal
-    helm.sh/chart: temporal-0.19.1
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/instance: temporal
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: frontend
     app.kubernetes.io/part-of: temporal
@@ -610,19 +598,17 @@ spec:
       name: metrics
   selector:
     app.kubernetes.io/name: temporal
-    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/instance: temporal
     app.kubernetes.io/component: frontend
 ---
 # Source: temporal/templates/server-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: temporaltest-matching-headless
+  name: temporal-matching-headless
+  namespace: temporal
   labels:
     app.kubernetes.io/name: temporal
-    helm.sh/chart: temporal-0.19.1
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: temporaltest
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: matching
     app.kubernetes.io/part-of: temporal
@@ -653,19 +639,19 @@ spec:
       name: metrics
   selector:
     app.kubernetes.io/name: temporal
-    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/instance: temporal
     app.kubernetes.io/component: matching
 ---
 # Source: temporal/templates/server-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: temporaltest-history-headless
+  name: temporal-history-headless
+  namespace: temporal
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/instance: temporal
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: history
     app.kubernetes.io/part-of: temporal
@@ -696,19 +682,19 @@ spec:
       name: metrics
   selector:
     app.kubernetes.io/name: temporal
-    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/instance: temporal
     app.kubernetes.io/component: history
 ---
 # Source: temporal/templates/server-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: temporaltest-worker-headless
+  name: temporal-worker-headless
+  namespace: temporal
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/instance: temporal
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: worker
     app.kubernetes.io/part-of: temporal
@@ -739,19 +725,20 @@ spec:
       name: metrics
   selector:
     app.kubernetes.io/name: temporal
-    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/instance: temporal
     app.kubernetes.io/component: worker
 ---
 # Source: temporal/templates/web-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: temporaltest-web
+  name: temporal-web
+  namespace: temporal
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
     app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/instance: temporal
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: web
     app.kubernetes.io/part-of: temporal
@@ -764,19 +751,19 @@ spec:
       name: http
   selector:
     app.kubernetes.io/name: temporal
-    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/instance: temporal
     app.kubernetes.io/component: web
 ---
 # Source: temporal/templates/admintools-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: temporaltest-admintools
+  name: temporal-admintools
+  namespace: temporal
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/instance: temporal
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: admintools
     app.kubernetes.io/part-of: temporal
@@ -785,21 +772,20 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: temporal
-      app.kubernetes.io/instance: temporaltest
+      app.kubernetes.io/instance: temporal
       app.kubernetes.io/component: admintools
   template:
     metadata:
       labels:
         app.kubernetes.io/name: temporal
         helm.sh/chart: temporal-0.19.1
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/instance: temporaltest
+        app.kubernetes.io/instance: temporal
         app.kubernetes.io/version: 1.19.1
         app.kubernetes.io/component: admintools
         app.kubernetes.io/part-of: temporal
     spec:
       
-      containers:
+      containers:       
         - name: admin-tools
           image: "temporalio/admin-tools:1.19.1"
           imagePullPolicy: IfNotPresent
@@ -809,7 +795,7 @@ spec:
               protocol: TCP
           env:
             - name: TEMPORAL_CLI_ADDRESS
-              value: temporaltest-frontend:7233
+              value: temporal-frontend:7233
           livenessProbe:
               exec:
                 command:
@@ -817,17 +803,21 @@ spec:
                 - /
               initialDelaySeconds: 5
               periodSeconds: 5
+          resources:
+            limits:
+              memory: "1Gi"
+              cpu: "500mi"
 ---
 # Source: temporal/templates/server-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: temporaltest-frontend
+  name: temporal-frontend
+  namespace: temporal
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/instance: temporal
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: frontend
     app.kubernetes.io/part-of: temporal
@@ -836,15 +826,14 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: temporal
-      app.kubernetes.io/instance: temporaltest
+      app.kubernetes.io/instance: temporal
       app.kubernetes.io/component: frontend
   template:
     metadata:
       labels:
         app.kubernetes.io/name: temporal
         helm.sh/chart: temporal-0.19.1
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/instance: temporaltest
+        app.kubernetes.io/instance: temporal
         app.kubernetes.io/version: 1.19.1
         app.kubernetes.io/component: frontend
         app.kubernetes.io/part-of: temporal
@@ -885,12 +874,12 @@ spec:
             - name: TEMPORAL_STORE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: temporaltest-default-store
+                  name: temporal-default-store
                   key: password
             - name: TEMPORAL_VISIBILITY_STORE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: temporaltest-visibility-store
+                  name: temporal-visibility-store
                   key: password
           ports:
             - name: rpc
@@ -910,14 +899,16 @@ spec:
             - name: dynamic-config
               mountPath: /etc/temporal/dynamic_config
           resources:
-            {}
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
       volumes:
         - name: config
           configMap:
-            name: "temporaltest-frontend-config"
+            name: "temporal-frontend-config"
         - name: dynamic-config
           configMap:
-            name: "temporaltest-dynamic-config"
+            name: "temporal-dynamic-config"
             items:
             - key: dynamic_config.yaml
               path: dynamic_config.yaml
@@ -926,12 +917,11 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: temporaltest-history
+  name: temporal-history
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/instance: temporal
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: history
     app.kubernetes.io/part-of: temporal
@@ -940,7 +930,7 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: temporal
-      app.kubernetes.io/instance: temporaltest
+      app.kubernetes.io/instance: temporal
       app.kubernetes.io/component: history
   template:
     metadata:
@@ -948,7 +938,7 @@ spec:
         app.kubernetes.io/name: temporal
         helm.sh/chart: temporal-0.19.1
         app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/instance: temporaltest
+        app.kubernetes.io/instance: temporal
         app.kubernetes.io/version: 1.19.1
         app.kubernetes.io/component: history
         app.kubernetes.io/part-of: temporal
@@ -989,12 +979,12 @@ spec:
             - name: TEMPORAL_STORE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: temporaltest-default-store
+                  name: temporal-default-store
                   key: password
             - name: TEMPORAL_VISIBILITY_STORE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: temporaltest-visibility-store
+                  name: temporal-visibility-store
                   key: password
           ports:
             - name: rpc
@@ -1014,14 +1004,16 @@ spec:
             - name: dynamic-config
               mountPath: /etc/temporal/dynamic_config
           resources:
-            {}
+            limits:
+              memory: "2Gi"
+              cpu: "1000m"
       volumes:
         - name: config
           configMap:
-            name: "temporaltest-history-config"
+            name: "temporal-history-config"
         - name: dynamic-config
           configMap:
-            name: "temporaltest-dynamic-config"
+            name: "temporal-dynamic-config"
             items:
             - key: dynamic_config.yaml
               path: dynamic_config.yaml
@@ -1030,12 +1022,12 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: temporaltest-matching
+  name: temporal-matching
+  namespace: temporal
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/instance: temporal
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: matching
     app.kubernetes.io/part-of: temporal
@@ -1044,7 +1036,7 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: temporal
-      app.kubernetes.io/instance: temporaltest
+      app.kubernetes.io/instance: temporal
       app.kubernetes.io/component: matching
   template:
     metadata:
@@ -1052,7 +1044,7 @@ spec:
         app.kubernetes.io/name: temporal
         helm.sh/chart: temporal-0.19.1
         app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/instance: temporaltest
+        app.kubernetes.io/instance: temporal
         app.kubernetes.io/version: 1.19.1
         app.kubernetes.io/component: matching
         app.kubernetes.io/part-of: temporal
@@ -1093,12 +1085,12 @@ spec:
             - name: TEMPORAL_STORE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: temporaltest-default-store
+                  name: temporal-default-store
                   key: password
             - name: TEMPORAL_VISIBILITY_STORE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: temporaltest-visibility-store
+                  name: temporal-visibility-store
                   key: password
           ports:
             - name: rpc
@@ -1118,14 +1110,16 @@ spec:
             - name: dynamic-config
               mountPath: /etc/temporal/dynamic_config
           resources:
-            {}
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
       volumes:
         - name: config
           configMap:
-            name: "temporaltest-matching-config"
+            name: "temporal-matching-config"
         - name: dynamic-config
           configMap:
-            name: "temporaltest-dynamic-config"
+            name: "temporal-dynamic-config"
             items:
             - key: dynamic_config.yaml
               path: dynamic_config.yaml
@@ -1134,12 +1128,12 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: temporaltest-worker
+  name: temporal-worker
+  namespace: temporal
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/instance: temporal
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: worker
     app.kubernetes.io/part-of: temporal
@@ -1148,15 +1142,14 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: temporal
-      app.kubernetes.io/instance: temporaltest
+      app.kubernetes.io/instance: temporal
       app.kubernetes.io/component: worker
   template:
     metadata:
       labels:
         app.kubernetes.io/name: temporal
         helm.sh/chart: temporal-0.19.1
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/instance: temporaltest
+        app.kubernetes.io/instance: temporal
         app.kubernetes.io/version: 1.19.1
         app.kubernetes.io/component: worker
         app.kubernetes.io/part-of: temporal
@@ -1197,12 +1190,12 @@ spec:
             - name: TEMPORAL_STORE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: temporaltest-default-store
+                  name: temporal-default-store
                   key: password
             - name: TEMPORAL_VISIBILITY_STORE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: temporaltest-visibility-store
+                  name: temporal-visibility-store
                   key: password
           ports:
             - name: rpc
@@ -1218,14 +1211,16 @@ spec:
             - name: dynamic-config
               mountPath: /etc/temporal/dynamic_config
           resources:
-            {}
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
       volumes:
         - name: config
           configMap:
-            name: "temporaltest-worker-config"
+            name: "temporal-worker-config"
         - name: dynamic-config
           configMap:
-            name: "temporaltest-dynamic-config"
+            name: "temporal-dynamic-config"
             items:
             - key: dynamic_config.yaml
               path: dynamic_config.yaml
@@ -1234,12 +1229,12 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: temporaltest-web
+  name: temporal-web
+  namespace: temporal
   labels:
     app.kubernetes.io/name: temporal
     helm.sh/chart: temporal-0.19.1
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/instance: temporaltest
+    app.kubernetes.io/instance: temporal
     app.kubernetes.io/version: 1.19.1
     app.kubernetes.io/component: web
     app.kubernetes.io/part-of: temporal
@@ -1248,15 +1243,14 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: temporal
-      app.kubernetes.io/instance: temporaltest
+      app.kubernetes.io/instance: temporal
       app.kubernetes.io/component: web
   template:
     metadata:
       labels:
         app.kubernetes.io/name: temporal
         helm.sh/chart: temporal-0.19.1
-        app.kubernetes.io/managed-by: Helm
-        app.kubernetes.io/instance: temporaltest
+        app.kubernetes.io/instance: temporal
         app.kubernetes.io/version: 1.19.1
         app.kubernetes.io/component: web
         app.kubernetes.io/part-of: temporal
@@ -1265,18 +1259,20 @@ spec:
       volumes:
         - name: temporal-web-config
           configMap:
-            name: temporaltest-web-config
+            name: temporal-web-config
       containers:
         - name: temporal-web
           image: "temporalio/ui:2.9.0"
           imagePullPolicy: IfNotPresent
           env:
             - name: TEMPORAL_ADDRESS
-              value: "temporaltest-frontend.default.svc:7233"
+              value: "temporal-frontend.default.svc:7233"
           ports:
             - name: http
               containerPort: 8080
               protocol: TCP
           resources:
-            {}
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
 ---
